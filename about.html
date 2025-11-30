@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>About ? LumenAI Agency</title>
+  <meta name="description" content="LumenAI is a boutique AI agency crafting human-centered intelligence products. Learn about our mission, team, and approach.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="canonical" href="about.html">
+  <meta property="og:title" content="About ? LumenAI Agency">
+  <meta property="og:description" content="LumenAI is a boutique AI agency crafting human-centered intelligence products. Learn about our mission, team, and approach.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Minimal inline fallback styles to ensure accessible layout if styles.css not loaded */
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7c5cff; --glass:rgba(255,255,255,0.03);
+      --radius:12px; --max-width:1100px; --gap:1.25rem; --accent-2:#6ee7b7;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; font-family:var(--sans); background:linear-gradient(180deg,#071021 0%, #071129 60%);
+      color:#e6eef6; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+    .container{max-width:var(--max-width);margin:0 auto;padding:2rem;box-sizing:border-box}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip-link:focus{left:1rem;top:1rem;width:auto;height:auto;padding:.5rem 1rem;background:#fff;color:#000;border-radius:6px;z-index:9999}
+    header.site-header{background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);backdrop-filter:blur(6px);position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem}
+    .brand{display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:1.05rem}
+    .brand .logo{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:10px;display:inline-block;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+    nav.site-nav{display:flex;align-items:center;gap:1rem}
+    .nav-links{display:flex;gap:.5rem;align-items:center}
+    .nav-links a{padding:.45rem .6rem;border-radius:8px;color:var(--muted);font-weight:600}
+    .nav-links a[aria-current="page"], .nav-links a:hover{color:#fff;background:var(--glass)}
+    .nav-toggle{display:none;background:transparent;border:1px solid rgba(255,255,255,0.04);padding:.4rem;border-radius:8px;color:var(--muted)}
+    main.site-main{padding:2rem 0}
+    .hero{display:grid;grid-template-columns:1fr;gap:1rem;padding:2rem;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:14px;border:1px solid rgba(255,255,255,0.03)}
+    .hero h1{margin:0 0 .25rem;font-size:1.9rem;line-height:1.05}
+    .hero p.lead{color:var(--muted);margin:0 0 1rem}
+    .hero .meta{display:flex;gap:.75rem;flex-wrap:wrap}
+    .pill{background:rgba(255,255,255,0.02);padding:.4rem .6rem;border-radius:999px;font-size:.9rem;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+    .grid{display:grid;gap:var(--gap)}
+    .two-col{grid-template-columns:repeat(2,1fr)}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:1rem;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .team-list{display:grid;gap:1rem}
+    .team-member{display:flex;gap:1rem;align-items:flex-start}
+    .avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#2b3346,#11203a);flex:0 0 64px;display:inline-block}
+    .member-info{flex:1}
+    .member-name{font-weight:700;margin:0;color:#fff}
+    .member-role{color:var(--muted);margin:0;font-size:.95rem}
+    .member-bio{margin:.5rem 0 0;color:var(--muted);font-size:.95rem}
+    footer.site-footer{padding:2rem 1rem;color:var(--muted);font-size:.95rem}
+    .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+    .cta-button{display:inline-block;padding:.6rem .9rem;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071129;font-weight:700;border:none;cursor:pointer}
+    @media (min-width:820px){
+      .hero{grid-template-columns:1fr 360px;align-items:center}
+      .nav-toggle{display:none}
+      .nav-links{gap:1rem}
+    }
+    @media (max-width:819px){
+      .nav-toggle{display:inline-flex}
+      .nav-links{display:none}
+      nav.site-nav.is-open .nav-links{display:flex;flex-direction:column;position:absolute;right:1rem;top:64px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:.75rem;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+      .hero{padding:1rem}
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link" id="skip-link">Skip to content</a>
+
+  <header class="site-header" role="banner" id="site-header">
+    <div class="container header-inner">
+      <div class="brand" aria-label="LumenAI home">
+        <span class="logo" aria-hidden="true"></span>
+        <a href="index.html" class="brand-link" aria-label="LumenAI Home">LumenAI</a>
+      </div>
+
+      <nav class="site-nav" role="navigation" aria-label="Primary" id="primary-nav" data-nav>
+        <button class="nav-toggle" id="nav-toggle" aria-controls="nav-links" aria-expanded="false" aria-label="Toggle navigation" data-nav-toggle>
+          Menu
+        </button>
+
+        <div class="nav-links" id="nav-links">
+          <a href="index.html" class="nav-link" data-smooth>Home</a>
+          <a href="about.html" class="nav-link" aria-current="page" data-smooth>About Us</a>
+          <a href="index.html#contact" class="nav-link" data-smooth>Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="site-main" role="main">
+    <div class="container">
+      <section class="hero" aria-labelledby="about-hero-heading">
+        <div>
+          <h1 id="about-hero-heading">About LumenAI ? Intelligence with Intention</h1>
+          <p class="lead">We design and deliver thoughtful AI experiences that augment human decision-making. Our work blends research, engineering, and product design to create tools that are useful, responsible, and delightful.</p>
+
+          <div class="meta" aria-hidden="false">
+            <span class="pill">Founded 2021</span>
+            <span class="pill">Remote-first</span>
+            <span class="pill">Small team ? big impact</span>
+          </div>
+
+          <div style="margin-top:1rem;">
+            <p style="color:var(--muted);margin:0 0 1rem;">Our approach centers on clarity: clear problem definition, clear human value, clear metrics. We partner closely with product teams and stakeholders to ship simple, trustworthy AI features.</p>
+            <a href="index.html#contact" class="cta-button" data-smooth>Get in touch</a>
+          </div>
+        </div>
+
+        <aside aria-labelledby="mission-heading" class="card" id="mission" role="complementary">
+          <h2 id="mission-heading" style="margin-top:0;font-size:1.1rem">Our Mission</h2>
+          <p style="color:var(--muted);margin:0 0 1rem">Make AI useful and humane ? we build systems that help teams make better decisions while preserving context, transparency, and control.</p>
+
+          <h3 style="margin:.75rem 0 0;font-size:.95rem">How we work</h3>
+          <ul style="margin:.5rem 0 0;padding-left:1.15rem;color:var(--muted)">
+            <li>Research-informed pilots</li>
+            <li>Rapid, iterative prototyping</li>
+            <li>Responsible deployment & monitoring</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="team card" aria-labelledby="team-heading" id="team" style="margin-top:1.25rem">
+        <h2 id="team-heading">Meet the team</h2>
+        <p style="color:var(--muted);margin-top:0">A small, interdisciplinary group combining ML engineering, product design, and strategy.</p>
+
+        <div class="team-list" role="list" aria-label="Core team members">
+          <article class="team-member" role="listitem" data-member="emily">
+            <div class="avatar" aria-hidden="true"></div>
+            <div class="member-info">
+              <p class="member-name">Emily Chen</p>
+              <p class="member-role">Founder & Product Lead</p>
+              <p class="member-bio">Product strategist focused on human-centered AI. Emily leads discovery and aligns technical solutions to user needs.</p>
+              <p style="margin-top:.5rem"><a href="mailto:emily@lumenai.example" class="member-contact">emily@lumenai.example</a></p>
+            </div>
+          </article>
+
+          <article class="team-member" role="listitem" data-member="sam">
+            <div class="avatar" aria-hidden="true"></div>
+            <div class="member-info">
+              <p class="member-name">Samir Patel</p>
+              <p class="member-role">ML Engineer</p>
+              <p class="member-bio">Builds robust, production-ready models and pipelines?focused on reliability and interpretability.</p>
+              <p style="margin-top:.5rem"><a href="mailto:samir@lumenai.example" class="member-contact">samir@lumenai.example</a></p>
+            </div>
+          </article>
+
+          <article class="team-member" role="listitem" data-member="ana">
+            <div class="avatar" aria-hidden="true"></div>
+            <div class="member-info">
+              <p class="member-name">Ana Morales</p>
+              <p class="member-role">Design & Research</p>
+              <p class="member-bio">Leads user research and designs interfaces that make complex systems feel intuitive and controllable.</p>
+              <p style="margin-top:.5rem"><a href="mailto:ana@lumenai.example" class="member-contact">ana@lumenai.example</a></p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="values-heading" style="margin-top:1.25rem">
+        <h2 id="values-heading">Values & Principles</h2>
+        <div class="grid two-col" style="margin-top:.75rem">
+          <div>
+            <h3 style="margin:0 0 .35rem">Clarity</h3>
+            <p style="margin:0;color:var(--muted)">We favor simple, explainable solutions over complexity for its own sake.</p>
+          </div>
+          <div>
+            <h3 style="margin:0 0 .35rem">Safety</h3>
+            <p style="margin:0;color:var(--muted)">We proactively assess risk and design systems that put people in control.</p>
+          </div>
+          <div>
+            <h3 style="margin:1rem 0 .35rem 0">Collaboration</h3>
+            <p style="margin:0;color:var(--muted)">We partner closely with stakeholders?sharing learning early and often.</p>
+          </div>
+          <div>
+            <h3 style="margin:1rem 0 .35rem 0">Impact</h3>
+            <p style="margin:0;color:var(--muted)">We measure success by sustained improvements to users' workflows and outcomes.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="cta-heading" style="margin-top:1.25rem;display:flex;flex-direction:column;align-items:flex-start;gap:.75rem">
+        <h2 id="cta-heading">Work with us</h2>
+        <p style="color:var(--muted);margin:0">Prefer a conversation? Reach out and we'll schedule a short discovery to explore fit and timeline.</p>
+        <div style="margin-top:.5rem">
+          <a href="index.html#contact" class="cta-button" data-smooth>Contact the team</a>
+          <a href="index.html" style="margin-left:.75rem;color:var(--muted)">Return to home</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo" aria-labelledby="footer-heading">
+    <div class="container footer-inner">
+      <div>
+        <p id="footer-heading" style="margin:0;color:var(--muted)">? <span id="year" aria-hidden="true"></span> LumenAI</p>
+        <p style="margin:0;color:var(--muted);font-size:.9rem">Built with clarity, care, and a little bit of magic.</p>
+      </div>
+      <div style="display:flex;gap:.75rem;align-items:center">
+        <a href="index.html" data-smooth>Home</a>
+        <a href="index.html#privacy" style="color:var(--muted)">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script defer src="script.js"></script>
+  <script>
+    // Lightweight inline behaviors to ensure basic functionality if script.js is missing.
+    (function(){
+      // If the main external script has loaded, prefer it and skip this inline fallback.
+      if (window.__lumenaiScriptLoaded) return;
+
+      // Helper: get a normalized base filename for a pathname (treat root as index.html)
+      function pathBase(pathname){
+        try{
+          // Remove trailing slashes
+          var p = pathname.replace(/\/+$/, '');
+          if(!p) return 'index.html';
+          var parts = p.split('/');
+          var last = parts[parts.length - 1] || 'index.html';
+          return last;
+        }catch(e){
+          return pathname;
+        }
+      }
+
+      // Helper: determine if an element is natively focusable
+      function isFocusable(el){
+        if(!el) return false;
+        // elements that are typically focusable or with tabindex >= 0
+        var focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, [tabindex]';
+        if(el.matches && el.matches(focusableSelectors)) return true;
+        return el.tabIndex >= 0;
+      }
+
+      // set current year
+      var y = new Date().getFullYear();
+      var el = document.getElementById('year');
+      if(el) el.textContent = y;
+
+      // Nav toggle: toggle a class on the nav container (CSS listens for .is-open on the nav)
+      var toggle = document.querySelector('[data-nav-toggle]');
+      var nav = document.querySelector('[data-nav]');
+      var navLinks = document.getElementById('nav-links');
+      if(toggle && nav){
+        toggle.addEventListener('click', function(){
+          var expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', String(!expanded));
+          nav.classList.toggle('is-open');
+          // Also toggle the links container for better CSS compatibility if present
+          if(navLinks){
+            navLinks.classList.toggle('is-open');
+            navLinks.setAttribute('aria-expanded', String(!expanded));
+          }
+        });
+      }
+
+      // Smooth scroll for intra-site anchors (only when JS enabled)
+      var smoothAnchors = document.querySelectorAll('a[data-smooth]');
+      smoothAnchors.forEach(function(a){
+        var href = a.getAttribute('href') || '';
+        if(href.indexOf('#') === -1) return;
+        a.addEventListener('click', function(e){
+          // Build absolute URL relative to current location
+          var dest;
+          try{
+            dest = new URL(href, window.location.href);
+          }catch(err){
+            // cannot parse URL, don't intervene
+            return;
+          }
+
+          // Compare normalized path bases so '/' and '/index.html' are treated as same
+          var currentBase = pathBase(window.location.pathname);
+          var destBase = pathBase(dest.pathname);
+
+          if(dest.origin === window.location.origin && destBase === currentBase){
+            var hash = dest.hash || '';
+            if(hash){
+              var targetId = hash.slice(1);
+              var target = document.getElementById(targetId);
+              if(target){
+                e.preventDefault();
+
+                // Make target focusable if needed, storing previous tabindex to restore later
+                var prevTab = target.getAttribute('tabindex');
+                var hadTab = target.hasAttribute('tabindex');
+                var needsTemp = !hadTab && !isFocusable(target);
+                if(needsTemp){
+                  target.setAttribute('tabindex','-1');
+                }
+
+                // Attempt to focus without scrolling first, then perform smooth scroll
+                try{
+                  target.focus({preventScroll: true});
+                }catch(err){
+                  try{ target.focus(); }catch(e){}
+                }
+
+                // Calculate scroll position taking into account sticky header offset (match CSS var --scroll-offset)
+                var headerOffset = 72; // keep consistent with CSS fallback; primary stylesheet defines --scroll-offset: 76px
+                var rectTop = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+                window.scrollTo({ top: Math.max(0, Math.floor(rectTop)), behavior: 'smooth' });
+
+                // Restore tabindex if we added it, or restore previous value
+                if(needsTemp){
+                  // Delay removal slightly to ensure focus action isn't interrupted on some browsers
+                  setTimeout(function(){
+                    target.removeAttribute('tabindex');
+                  }, 300);
+                }else if(prevTab !== null){
+                  target.setAttribute('tabindex', prevTab);
+                }
+              }
+            }
+          }
+          // If the destination is on another page (different base), allow default navigation
+        });
+      });
+
+      // Ensure skip link focus works in all browsers and restore original tabindex afterward
+      var skip = document.getElementById('skip-link');
+      if(skip){
+        skip.addEventListener('click', function(e){
+          var main = document.getElementById('main-content');
+          if(main){
+            var prev = main.getAttribute('tabindex');
+            var hadPrev = main.hasAttribute('tabindex');
+            if(!hadPrev) main.setAttribute('tabindex','-1');
+            try{ main.focus(); }catch(err){}
+            // restore tabindex on blur (once)
+            var cleanup = function(){
+              if(!hadPrev){
+                main.removeAttribute('tabindex');
+              }else if(prev !== null){
+                main.setAttribute('tabindex', prev);
+              }
+              main.removeEventListener('blur', cleanup, true);
+            };
+            main.addEventListener('blur', cleanup, true);
+          }
+        });
+      }
+
+      // Mark that the inline fallback has run to avoid duplicate fallback initialization
+      window.__lumenaiInlineLoaded = true;
+    })();
+  </script>
+</body>
+</html>
