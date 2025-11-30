@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AI Agency ? Home</title>
+  <meta name="description" content="AI Agency ? Strategic AI consulting, custom models, and product design. Minimal, accessible static example site." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="/index.html" />
+  <meta name="robots" content="index, follow" />
+  <!-- Shared stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page page-home">
+  <a class="skip-link" href="#main" id="skip-link">Skip to main content</a>
+
+  <header class="site-header" role="banner" id="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <a href="index.html" class="brand-link" aria-label="AI Agency Home">
+          <strong class="brand-name">AI Agency</strong>
+          <small class="brand-tagline">Design ? Build ? Deploy</small>
+        </a>
+      </div>
+
+      <nav id="primary-nav" class="nav primary-nav" role="navigation" aria-label="Primary Navigation" data-nav>
+        <ul class="nav-list" aria-label="Main menu">
+          <li role="none"><a class="nav-link" href="index.html">Home</a></li>
+          <li role="none"><a class="nav-link" href="about.html">About Us</a></li>
+          <li role="none"><a class="nav-link" href="#services" data-scroll>Services</a></li>
+          <li role="none"><a class="nav-link" href="#contact" data-scroll>Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="nav-toggle" id="nav-toggle" aria-controls="primary-nav" aria-expanded="false" data-nav-toggle>
+          <span class="sr-only">Toggle navigation</span>
+          <svg width="24" height="24" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="site-main" role="main">
+    <!-- Hero -->
+    <section id="hero" class="hero" aria-labelledby="hero-heading">
+      <div class="hero-inner">
+        <h1 id="hero-heading" class="hero-title">Crafting intelligent products with human-centered AI</h1>
+        <p class="hero-lead">We design and build production-ready AI systems that empower teams and delight users. Strategy, models, and product-grade integrations.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#contact" data-scroll>Contact Us</a>
+          <a class="btn btn-ghost" href="about.html">Learn About Us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="section services" aria-labelledby="services-heading">
+      <div class="container">
+        <h2 id="services-heading" class="section-title">Our Services</h2>
+        <p class="section-intro">From strategy to production, we cover the full lifecycle of AI products.</p>
+        <ul class="services-grid" role="list">
+          <li class="service-item" role="listitem" id="service-1">
+            <h3 class="service-title">AI Strategy & Roadmapping</h3>
+            <p class="service-desc">We help leadership define where AI creates the most value and create a pragmatic roadmap to production.</p>
+            <a class="service-learn" href="about.html#mission">Learn more</a>
+          </li>
+          <li class="service-item" role="listitem" id="service-2">
+            <h3 class="service-title">Custom Models & Engineering</h3>
+            <p class="service-desc">Model selection, fine-tuning, and scalable engineering to deliver reliable outcomes for your users.</p>
+            <a class="service-learn" href="#contact" data-scroll>Start a project</a>
+          </li>
+          <li class="service-item" role="listitem" id="service-3">
+            <h3 class="service-title">Product Design & UX</h3>
+            <p class="service-desc">Human-centered AI design that turns capabilities into delightful, trustworthy experiences.</p>
+            <a class="service-learn" href="about.html#team">Meet the team</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="section testimonials" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <h2 id="testimonials-heading" class="section-title">What clients say</h2>
+        <ul class="testimonials-list" role="list">
+          <li class="testimonial" role="listitem">
+            <blockquote class="testimonial-quote">"They helped us turn a vague idea into a production feature in under three months. Their pragmatic approach saved us time and money."</blockquote>
+            <cite class="testimonial-author">? Product Lead, Fintech Co.</cite>
+          </li>
+          <li class="testimonial" role="listitem">
+            <blockquote class="testimonial-quote">"Their team balanced research and engineering beautifully; the model exceeded our performance targets and shipped on schedule."</blockquote>
+            <cite class="testimonial-author">? CTO, HealthTech Startup</cite>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section contact" aria-labelledby="contact-heading">
+      <div class="container">
+        <h2 id="contact-heading" class="section-title">Get in touch</h2>
+        <p class="section-intro">Tell us about your project or request an introductory call. We'll respond within a few business days.</p>
+
+        <form id="contact-form" class="form form-contact" action="#" method="post" novalidate data-validate>
+          <input type="hidden" name="form-name" value="contact" />
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="name" class="form-label">Full name</label>
+              <input id="name" name="name" type="text" class="input" required aria-required="true" placeholder="Your name" aria-describedby="name-error" />
+              <span class="field-error" id="name-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="email" class="form-label">Email</label>
+              <input id="email" name="email" type="email" class="input" required aria-required="true" placeholder="you@example.com" pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" aria-describedby="email-error" />
+              <span class="field-error" id="email-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-field form-field-full">
+              <label for="company" class="form-label">Company (optional)</label>
+              <input id="company" name="company" type="text" class="input" placeholder="Company name" aria-describedby="company-error" />
+              <span class="field-error" id="company-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-field form-field-full">
+              <label for="message" class="form-label">Message</label>
+              <textarea id="message" name="message" rows="6" class="input input-area" required aria-required="true" placeholder="Tell us about your challenge, timeline, and budget." aria-describedby="message-error"></textarea>
+              <span class="field-error" id="message-error" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="contact-submit">Send message</button>
+            <button type="reset" class="btn btn-ghost">Reset</button>
+            <div id="form-status" class="form-status" aria-live="polite" role="status"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="brand-link">AI Agency</a>
+        <p class="small">? <span id="current-year" aria-hidden="true">2025</span> AI Agency. All rights reserved.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer Navigation">
+        <ul class="footer-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="#services" data-scroll>Services</a></li>
+          <li><a href="#contact" data-scroll>Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Inline enhancements:
+       - Populate footer year (in case external script doesn't)
+       - Client-side per-field validation with aria-invalid, focus-first-invalid, and per-field error messages
+       - Simple asset checks for about.html/styles.css/script.js; if about.html missing, provide in-page fallback with #mission and #team anchors
+  -->
+  <script>
+    (function () {
+      // I3: Ensure current year is set
+      var yearEl = document.getElementById('current-year');
+      if (yearEl) {
+        try {
+          yearEl.textContent = new Date().getFullYear();
+        } catch (e) {
+          yearEl.textContent = '2025';
+        }
+      }
+
+      // Simple helper to set field error
+      function setFieldError(el, message) {
+        var id = el && el.id;
+        if (!id) return;
+        var err = document.getElementById(id + '-error');
+        if (err) err.textContent = message || '';
+        if (message) {
+          el.setAttribute('aria-invalid', 'true');
+          el.classList && el.classList.add && el.classList.add('is-invalid');
+        } else {
+          el.removeAttribute('aria-invalid');
+          el.classList && el.classList.remove && el.classList.remove('is-invalid');
+        }
+      }
+
+      // I2 & I5: Form validation
+      var form = document.getElementById('contact-form');
+      var status = document.getElementById('form-status');
+
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var fields = [
+            { el: document.getElementById('name'), required: true, msg: 'Please enter your name.' },
+            { el: document.getElementById('email'), required: true, msg: 'Please enter a valid email address.' },
+            { el: document.getElementById('message'), required: true, msg: 'Please enter a message.' }
+          ];
+
+          var firstInvalid = null;
+          var hasError = false;
+
+          // Clear previous errors
+          fields.forEach(function (f) {
+            if (f && f.el) setFieldError(f.el, '');
+          });
+          if (status) status.textContent = '';
+
+          // Validate
+          fields.forEach(function (f) {
+            var el = f.el;
+            if (!el) return;
+            var val = (el.value || '').trim();
+            var invalid = false;
+
+            if (f.required && !val) {
+              invalid = true;
+            } else if (el.type === 'email' && val) {
+              var pattern = el.getAttribute('pattern');
+              var re = null;
+              if (pattern) {
+                try {
+                  re = new RegExp(pattern);
+                } catch (err) {
+                  re = null;
+                }
+              }
+              if (re) {
+                if (!re.test(val)) invalid = true;
+              } else {
+                // basic email check
+                if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val)) invalid = true;
+              }
+            }
+
+            if (invalid) {
+              hasError = true;
+              setFieldError(el, f.msg);
+              if (!firstInvalid) firstInvalid = el;
+            } else {
+              setFieldError(el, '');
+            }
+          });
+
+          if (hasError) {
+            if (firstInvalid && typeof firstInvalid.focus === 'function') {
+              firstInvalid.focus();
+            }
+            if (status) status.textContent = 'Please correct the highlighted fields and try again.';
+            return;
+          }
+
+          // If valid, show a success message (no actual submission in this static demo)
+          if (status) status.textContent = 'Thanks ? your message has been prepared. (This demo does not send messages.)';
+          form.reset();
+          // clear any lingering aria-invalid/messages
+          ['name', 'email', 'company', 'message'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) setFieldError(el, '');
+          });
+        });
+
+        form.addEventListener('reset', function () {
+          ['name', 'email', 'company', 'message'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) {
+              el.removeAttribute('aria-invalid');
+              var err = document.getElementById(id + '-error');
+              if (err) err.textContent = '';
+            }
+          });
+          if (status) status.textContent = '';
+        });
+      }
+
+      // I4: Verify presence of about.html, styles.css, and script.js.
+      // If about.html is missing, create an in-page fallback with #mission and #team anchors
+      function checkAsset(url, callback) {
+        // Try HEAD first, fallback to GET
+        try {
+          fetch(url, { method: 'HEAD', cache: 'no-store' }).then(function (resp) {
+            if (!resp.ok) {
+              // try GET
+              fetch(url, { method: 'GET', cache: 'no-store' }).then(function (r2) {
+                callback(!!r2.ok);
+              }).catch(function () { callback(false); });
+            } else {
+              callback(true);
+            }
+          }).catch(function () {
+            // network or CORS issues; optimistic true for CSS/JS, false for about.html
+            // try GET as fallback
+            fetch(url, { method: 'GET', cache: 'no-store' }).then(function (r2) {
+              callback(!!r2.ok);
+            }).catch(function () {
+              callback(false);
+            });
+          });
+        } catch (e) {
+          callback(false);
+        }
+      }
+
+      // Only check about.html for fallback behavior; styles.css/script.js we log warnings if missing.
+      checkAsset('about.html', function (exists) {
+        if (!exists) {
+          // Create a simple in-page fallback "about" section with #mission and #team anchors
+          var fallback = document.getElementById('about-fallback');
+          if (!fallback) {
+            fallback = document.createElement('section');
+            fallback.id = 'about-fallback';
+            fallback.style.display = 'none';
+            fallback.setAttribute('aria-hidden', 'true');
+            fallback.innerHTML = '<div class="container about-fallback-inner">' +
+              '<h2 id="mission">Our mission</h2>' +
+              '<p>We help organizations responsibly adopt AI to create customer and business value.</p>' +
+              '<h3 id="team">Team</h3>' +
+              '<p>Small cross-functional team of researchers, engineers, and designers focused on production AI.</p>' +
+              '</div>';
+            document.body.appendChild(fallback);
+          }
+
+          // Intercept clicks to about.html to show the fallback inline content
+          document.addEventListener('click', function (e) {
+            var a = e.target;
+            while (a && a.nodeName !== 'A') a = a.parentElement;
+            if (!a) return;
+            var href = a.getAttribute('href') || '';
+            var isAbout = href === 'about.html' || href.indexOf('about.html#') === 0;
+            if (!isAbout) return;
+            e.preventDefault();
+            // show fallback and navigate to appropriate anchor
+            fallback.style.display = '';
+            fallback.removeAttribute('aria-hidden');
+            var hash = (href.split('#')[1] || 'mission');
+            var target = document.getElementById(hash);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+          }, false);
+        }
+      });
+
+      checkAsset('styles.css', function (exists) {
+        if (!exists) {
+          console.warn('Warning: styles.css not found in project root.');
+        }
+      });
+      checkAsset('script.js', function (exists) {
+        if (!exists) {
+          console.warn('Warning: script.js not found in project root.');
+        }
+      });
+    })();
+  </script>
+
+  <!-- Shared script for interactions: mobile nav toggle, smooth scroll, form validation -->
+  <script defer src="script.js"></script>
+</body>
+</html>
