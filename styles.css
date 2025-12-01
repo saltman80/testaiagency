@@ -483,3 +483,267 @@ img, svg{ max-width: 100%; height: auto; display: block; }
     to { opacity: 1; transform: translateY(0); }
   }
 }
+
+/* DEMO
+   Scoped styles for demo.html interactions and visuals.
+   Keep classes prefixed with .demo- to avoid global selector conflicts.
+   Includes .demo-hero, .demo-features, .demo-workflow and .workflow-step rules.
+*/
+
+/* Design tokens specific to demo section (scoped variables override) */
+:root{
+  --demo-accent: linear-gradient(90deg, rgba(111,211,169,0.95), rgba(147,197,253,0.95));
+  --demo-surface: rgba(255,255,255,0.02);
+  --demo-contrast: #e9fbf1;
+  --demo-step-size: 14px;
+}
+
+/* Hero for demo page */
+.demo-hero, .demoHero {
+  padding-block: calc(var(--space-2xl));
+  background: linear-gradient(180deg, rgba(11,20,34,0.6), rgba(6,12,20,0.2));
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-xl);
+  overflow: visible;
+  display: grid;
+  gap: var(--space-lg);
+}
+.demo-hero .container, .demoHero .container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+}
+@media (min-width: 1100px){
+  .demo-hero .container, .demoHero .container {
+    grid-template-columns: 1fr 420px;
+    align-items: center;
+  }
+}
+
+/* Hero content & art */
+.demo-hero .heroContent { display: grid; gap: var(--space-md); }
+.demo-hero .heroTitle { font-size: clamp(1.75rem, 4.8vw, 2.25rem); color: var(--demo-contrast); line-height: 1.04; }
+.demo-hero .heroLead { color: var(--color-muted); max-width: 64ch; font-size: 1.0625rem; }
+
+/* Hero art card to frame the placeholder image */
+.demo-hero .heroArt, .demoHero .heroArt {
+  justify-self: center;
+  align-self: center;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  box-shadow: 0 20px 60px rgba(2,6,23,0.7), 0 2px 6px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Image treatments */
+.demo-hero .heroArt img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  background: linear-gradient(180deg, rgba(11,18,32,0.5), rgba(6,12,20,0.6));
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.demo-hero .heroArt img:hover, .demo-hero .heroArt img:focus {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 30px 80px rgba(2,6,23,0.6);
+}
+
+/* CTA specific to demo */
+.demo-cta {
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: var(--space-md);
+  align-items: center;
+  margin-top: var(--space-sm);
+}
+.demo-cta .btn--primary { padding-inline: calc(var(--space-lg)); padding-block: calc(var(--space-xs) + 2px); font-size: var(--fs-md); border-radius: 12px; }
+
+/* Features grid for demo (3 cards on desktop) */
+.demo-features, .demoFeatures {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: 1fr;
+  margin-bottom: var(--space-2xl);
+}
+@media (min-width: 720px){
+  .demo-features { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1100px){
+  .demo-features { grid-template-columns: repeat(3, 1fr); }
+}
+
+.demo-feature, .demoFeature {
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+  border-radius: 14px;
+  padding: var(--space-md);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.5);
+  transition: transform .16s ease, box-shadow .16s ease;
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+.demo-feature:hover, .demo-feature:focus-within {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 60px rgba(2,6,23,0.65);
+}
+.demo-feature .demoFeatureIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--demo-accent);
+  display: inline-grid;
+  place-items: center;
+  color: #072023;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(2,6,23,0.5);
+}
+.demo-feature h3 { margin: 0; color: var(--color-contrast); font-size: var(--fs-lg); }
+.demo-feature p { margin: 0; color: var(--color-muted); font-size: var(--fs-sm); }
+
+/* Workflow / stepper / carousel */
+.demo-workflow, .demoWorkflow {
+  padding: var(--space-lg);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(2,6,23,0.55);
+  margin-bottom: var(--space-2xl);
+}
+
+/* Track that holds slides (JS will manipulate translateX on .workflow-track) */
+.workflow-track {
+  display: flex;
+  gap: var(--space-md);
+  overflow: hidden;
+  width: 100%;
+  will-change: transform;
+}
+
+/* Each slide is .workflow-step (alias .workflowStep) */
+.workflow-step, .workflowStep {
+  min-width: 100%;
+  flex: 0 0 100%;
+  border-radius: 12px;
+  padding: var(--space-lg);
+  display: grid;
+  gap: var(--space-sm);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  align-items: center;
+  transition: transform .36s cubic-bezier(.2,.9,.2,1), opacity .24s ease;
+  opacity: 1;
+}
+
+/* If JS toggles .is-hidden or .is-inactive, we leave possibility for graceful degrade */
+.workflow-step.is-inactive { opacity: 0.06; transform: scale(.995); pointer-events: none; }
+
+/* Controls (prev/next) */
+.workflow-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+.workflow-controls .workflowBtn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--color-contrast);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+.workflow-controls .workflowBtn:hover, .workflow-controls .workflowBtn:focus {
+  transform: translateY(-3px);
+  background: rgba(255,255,255,0.02);
+  box-shadow: 0 8px 24px rgba(2,6,23,0.45);
+}
+.workflow-controls .workflowBtn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+/* Indicators (dots) */
+.workflow-indicators {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.workflow-indicators button {
+  width: var(--demo-step-size);
+  height: var(--demo-step-size);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+.workflow-indicators button:hover, .workflow-indicators button:focus {
+  transform: scale(1.08);
+  outline: none;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+}
+.workflow-indicators button.is-active {
+  background: var(--color-primary);
+  box-shadow: 0 8px 30px rgba(96,165,250,0.12);
+}
+
+/* Accessibility: make buttons and interactive elements larger on mobile */
+@media (max-width: 719px){
+  .workflow-controls .workflowBtn { padding: 10px 14px; min-width: 44px; }
+  .workflow-indicators button { width: 16px; height: 16px; }
+}
+
+/* Demo cards CTA styling */
+.demo-cta .btn--ghost {
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  color: var(--color-contrast);
+}
+
+/* Small helper used by JS to hide overflow when animating */
+.demoWorkflow--locked .workflow-track { pointer-events: none; }
+
+/* Focus styles specifically for demo controls for clearer keyboard UX */
+.demo-hero a:focus-visible, .demo-feature a:focus-visible, .workflow-controls .workflowBtn:focus-visible, .workflow-indicators button:focus-visible {
+  box-shadow: 0 0 0 4px rgba(147,197,253,0.12);
+  border-radius: 8px;
+}
+
+/* Decorative gradients and accents for demo header badges */
+.demo-badge {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #062022;
+  background: linear-gradient(90deg, rgba(110,231,183,0.96), rgba(147,197,253,0.96));
+  font-weight: 800;
+  box-shadow: 0 12px 40px rgba(96,165,250,0.06);
+}
+
+/* Utilities to invert colors for dark-on-light inserts if needed */
+.demo-inverse {
+  background: #fff;
+  color: #032;
+}
+
+/* Reduced-motion: reduce animations for users who prefer it */
+@media (prefers-reduced-motion: reduce){
+  .demo-hero .heroArt img, .demo-feature, .workflow-step, .workflow-track, .demo-cta .btn { transition: none !important; animation: none !important; }
+}
+
+/* Small responsive polish: tighten paddings on very small screens */
+@media (max-width: 420px){
+  .demo-hero { padding-block: var(--space-lg); border-radius: 10px; }
+  .demo-feature { padding: var(--space-sm); gap: var(--space-sm); }
+  .demo-hero .heroArt { padding: 8px; }
+}
+
+/* Ensure demo styles are visually isolated and won't leak to other pages
+   by providing alternative aliases for possible markup variations used in templates */
+.demo-hero, .demoHero, .demo_features, .demoFeatures, .demo-workflow, .demoWorkflow { isolation: isolate; }
