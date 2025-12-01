@@ -10,12 +10,12 @@
   <!-- Shared stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="page page-home">
+<body class="page page-home" data-page="index">
   <a class="skip-link" href="#main" id="skip-link">Skip to main content</a>
 
   <header class="site-header" role="banner" id="site-header">
-    <div class="header-inner">
-      <div class="brand">
+    <div class="header-inner container">
+      <div class="brand" id="brand">
         <a href="index.html" class="brand-link" aria-label="AI Agency Home">
           <strong class="brand-name">AI Agency</strong>
           <small class="brand-tagline">Design ? Build ? Deploy</small>
@@ -24,14 +24,18 @@
 
       <nav id="primary-nav" class="nav primary-nav" role="navigation" aria-label="Primary Navigation" data-nav>
         <ul class="nav-list" aria-label="Main menu">
-          <li role="none"><a class="nav-link" href="index.html">Home</a></li>
+          <li role="none"><a class="nav-link" href="index.html" aria-current="page">Home</a></li>
           <li role="none"><a class="nav-link" href="about.html">About Us</a></li>
+          <li role="none"><a class="nav-link" href="demo.html" aria-label="AI Agency Demo ? Interactive demo page">AI Agency Demo</a></li>
           <li role="none"><a class="nav-link" href="#services" data-scroll>Services</a></li>
           <li role="none"><a class="nav-link" href="#contact" data-scroll>Contact</a></li>
         </ul>
       </nav>
 
-      <div class="header-actions">
+      <div class="header-actions" aria-hidden="false">
+        <!-- Prominent demo CTA for desktop users; hidden on mobile via existing CSS when necessary -->
+        <a class="btn btn-primary demo-cta" href="demo.html" aria-label="Open AI Agency Demo">Try the Demo</a>
+
         <button class="nav-toggle" id="nav-toggle" aria-controls="primary-nav" aria-expanded="false" data-nav-toggle>
           <span class="sr-only">Toggle navigation</span>
           <svg width="24" height="24" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
@@ -45,12 +49,35 @@
   <main id="main" class="site-main" role="main">
     <!-- Hero -->
     <section id="hero" class="hero" aria-labelledby="hero-heading">
-      <div class="hero-inner">
-        <h1 id="hero-heading" class="hero-title">Crafting intelligent products with human-centered AI</h1>
-        <p class="hero-lead">We design and build production-ready AI systems that empower teams and delight users. Strategy, models, and product-grade integrations.</p>
-        <div class="hero-ctas">
-          <a class="btn btn-primary" href="#contact" data-scroll>Contact Us</a>
-          <a class="btn btn-ghost" href="about.html">Learn About Us</a>
+      <div class="hero-inner container">
+        <div>
+          <h1 id="hero-heading" class="hero-title">Crafting intelligent products with human-centered AI</h1>
+          <p class="hero-lead">We design and build production-ready AI systems that empower teams and delight users. Strategy, models, and product-grade integrations.</p>
+          <div class="hero-ctas" role="group" aria-label="Primary calls to action">
+            <a class="btn btn-primary" href="#contact" data-scroll aria-label="Contact AI Agency">Contact Us</a>
+            <a class="btn btn-ghost" href="about.html" aria-label="Learn about AI Agency">Learn About Us</a>
+            <a class="btn btn-ghost" href="demo.html" aria-label="Open the AI Agency demo">AI Agency Demo</a>
+          </div>
+        </div>
+
+        <!-- Visual / decorative column for balance (keeps layout polished on larger screens). -->
+        <div class="hero-visual" aria-hidden="true" style="min-height:160px; display:flex; align-items:center; justify-content:center;">
+          <!-- Decorative placeholder - CSS provides gradients and subtle shapes; keep lightweight for performance. -->
+          <svg width="420" height="220" viewBox="0 0 420 220" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="rgba(110,231,183,0.18)"></stop>
+                <stop offset="1" stop-color="rgba(147,197,253,0.12)"></stop>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="420" height="220" rx="18" fill="url(#g1)"></rect>
+            <g fill="rgba(255,255,255,0.06)" transform="translate(24,28)">
+              <rect x="0" y="0" width="140" height="28" rx="6"></rect>
+              <rect x="0" y="40" width="220" height="14" rx="6"></rect>
+              <rect x="0" y="66" width="180" height="14" rx="6"></rect>
+              <rect x="0" y="96" width="380" height="90" rx="10" opacity="0.05"></rect>
+            </g>
+          </svg>
         </div>
       </div>
     </section>
@@ -60,7 +87,7 @@
       <div class="container">
         <h2 id="services-heading" class="section-title">Our Services</h2>
         <p class="section-intro">From strategy to production, we cover the full lifecycle of AI products.</p>
-        <ul class="services-grid" role="list">
+        <ul class="services-grid" role="list" aria-label="List of services">
           <li class="service-item" role="listitem" id="service-1">
             <h3 class="service-title">AI Strategy & Roadmapping</h3>
             <p class="service-desc">We help leadership define where AI creates the most value and create a pragmatic roadmap to production.</p>
@@ -84,7 +111,7 @@
     <section id="testimonials" class="section testimonials" aria-labelledby="testimonials-heading">
       <div class="container">
         <h2 id="testimonials-heading" class="section-title">What clients say</h2>
-        <ul class="testimonials-list" role="list">
+        <ul class="testimonials-list" role="list" aria-label="Client testimonials">
           <li class="testimonial" role="listitem">
             <blockquote class="testimonial-quote">"They helped us turn a vague idea into a production feature in under three months. Their pragmatic approach saved us time and money."</blockquote>
             <cite class="testimonial-author">? Product Lead, Fintech Co.</cite>
@@ -114,7 +141,7 @@
 
             <div class="form-field">
               <label for="email" class="form-label">Email</label>
-              <input id="email" name="email" type="email" class="input" required aria-required="true" placeholder="you@example.com" pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" aria-describedby="email-error" />
+              <input id="email" name="email" type="email" class="input" required aria-required="true" placeholder="you@example.com" pattern="^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" aria-describedby="email-error" />
               <span class="field-error" id="email-error" aria-live="polite"></span>
             </div>
 
@@ -151,6 +178,7 @@
         <ul class="footer-list">
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
+          <li><a href="demo.html">AI Agency Demo</a></li>
           <li><a href="#services" data-scroll>Services</a></li>
           <li><a href="#contact" data-scroll>Contact</a></li>
         </ul>
