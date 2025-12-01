@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Agency ? Demo</title>
+  <meta name="description" content="Interactive demo page for AI Agency ? showcase features, workflows, and a lightweight stepper/carousel interaction." />
+  <link rel="canonical" href="/demo.html" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- Global + Demo Styles -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- DEMO: scoped demo styles (kept minimal to avoid global conflicts) -->
+  <style>
+    /* DEMO */
+    .demo-hero__image {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(10, 15, 25, 0.08);
+    }
+
+    .demo-features .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .workflow__indicators {
+      display: inline-flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .workflow__indicator {
+      min-width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .workflow__indicator[aria-selected="true"] {
+      background: var(--color-accent, #60a5fa);
+      color: #fff;
+      border-color: rgba(0,0,0,0.12);
+      font-weight: 600;
+    }
+
+    /* workflow slides: use aria-hidden to show/hide slides */
+    .workflow-step[aria-hidden="true"] {
+      display: none;
+    }
+
+    .workflow-step[aria-hidden="false"] {
+      display: block;
+    }
+
+    /* Responsive tweak: stack hero on small screens */
+    @media (max-width: 740px) {
+      .demo-hero__inner {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .demo-hero__media {
+        order: 2;
+      }
+      .demo-hero__content {
+        order: 1;
+      }
+    }
+  </style>
+  <!-- TODO: Replace placeholder meta/content with production SEO copy before launch -->
+</head>
+<body data-page="demo">
+  <!-- Skip link for keyboard users -->
+  <a class="skip-link" href="#main" id="skip-link">Skip to content</a>
+
+  <!-- Site Header / Navigation (consistent across pages) -->
+  <header class="site-header" role="banner" aria-label="Site header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" id="site-brand">
+        <span class="visually-hidden">AI Agency</span>
+        AI Agency
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="site-nav" role="navigation" aria-label="Primary" id="primary-nav">
+        <ul class="nav-list" id="primary-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="demo.html" class="nav-link nav-link--active" aria-current="page">AI Agency Demo</a></li>
+        </ul>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="nav-toggle" id="nav-toggle" aria-controls="mobile-menu" aria-expanded="false" aria-label="Open main menu">
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation (kept in DOM for accessibility; toggled via JS) -->
+    <div id="mobile-menu" class="mobile-menu" hidden>
+      <nav role="navigation" aria-label="Mobile primary">
+        <ul class="mobile-nav-list">
+          <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+          <li><a href="about.html" class="mobile-nav-link">About</a></li>
+          <li><a href="demo.html" class="mobile-nav-link mobile-nav-link--active" aria-current="page">AI Agency Demo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main" class="site-main" role="main" tabindex="-1">
+    <!-- Hero -->
+    <section class="demo-hero" aria-labelledby="hero-title" role="region">
+      <div class="container demo-hero__inner">
+        <div class="demo-hero__content">
+          <h1 id="hero-title" class="demo-hero__title">AI Agency ? Hands-on Demo</h1>
+          <p class="demo-hero__tagline">Explore a lightweight interactive workflow showing how our AI processes briefs into creative assets.</p>
+          <!-- TODO: Replace the hero copy and value propositions with finalized marketing content -->
+          <div class="demo-hero__actions">
+            <a href="#workflow" class="btn btn-primary" id="demo-cta">Try the Workflow</a>
+            <a href="index.html" class="btn btn-secondary">Back to Home</a>
+          </div>
+        </div>
+
+        <figure class="demo-hero__media">
+          <!-- TODO: Replace placeholder hero asset with final design asset -->
+          <img src="assets/demo-hero.png" alt="Mockup showing AI-driven creative workflow ? placeholder image" class="demo-hero__image" id="demo-hero-image">
+          <figcaption class="visually-hidden">Placeholder hero asset for demo (assets/demo-hero.png)</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Features / Capabilities -->
+    <section class="demo-features" aria-labelledby="features-title" role="region">
+      <div class="container">
+        <h2 id="features-title" class="section-title">Core features</h2>
+        <p class="section-lead">A quick tour of the demo capabilities. Each card is a placeholder for future content and visuals.</p>
+        <ul class="feature-grid" role="list">
+          <li class="feature-card" id="feature-1">
+            <div class="feature-card__visual" aria-hidden="true">
+              <!-- Decorative placeholder visual -->
+              <svg width="160" height="120" viewBox="0 0 160 120" class="placeholder-graphic" role="img" aria-hidden="true"><rect width="160" height="120" fill="#F3F4F6"></rect></svg>
+            </div>
+            <h3 class="feature-card__title">Smart Briefing</h3>
+            <p class="feature-card__desc">Generate structured briefs from unstructured input using context-aware prompts.</p>
+            <!-- TODO: Replace placeholder visual with interactive example or demo snippet -->
+          </li>
+
+          <li class="feature-card" id="feature-2">
+            <div class="feature-card__visual" aria-hidden="true">
+              <svg width="160" height="120" viewBox="0 0 160 120" class="placeholder-graphic" role="img" aria-hidden="true"><rect width="160" height="120" fill="#F3F4F6"></rect></svg>
+            </div>
+            <h3 class="feature-card__title">Automated Iteration</h3>
+            <p class="feature-card__desc">Rapidly propose multiple creative directions and iterate with human feedback.</p>
+          </li>
+
+          <li class="feature-card" id="feature-3">
+            <div class="feature-card__visual" aria-hidden="true">
+              <svg width="160" height="120" viewBox="0 0 160 120" class="placeholder-graphic" role="img" aria-hidden="true"><rect width="160" height="120" fill="#F3F4F6"></rect></svg>
+            </div>
+            <h3 class="feature-card__title">Integrated Delivery</h3>
+            <p class="feature-card__desc">Export-ready assets with brand tokens and versioning, ready for production handoff.</p>
+          </li>
+
+          <li class="feature-card" id="feature-4">
+            <div class="feature-card__visual" aria-hidden="true">
+              <svg width="160" height="120" viewBox="0 0 160 120" class="placeholder-graphic" role="img" aria-hidden="true"><rect width="160" height="120" fill="#F3F4F6"></rect></svg>
+            </div>
+            <h3 class="feature-card__title">Human-in-the-Loop</h3>
+            <p class="feature-card__desc">Control, approve, and refine outputs with lightweight collaboration tools.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Workflow / Stepper (Carousel-like) -->
+    <section id="workflow" class="demo-workflow" aria-labelledby="workflow-title" role="region">
+      <div class="container">
+        <h2 id="workflow-title" class="section-title">Workflow walkthrough</h2>
+        <p class="section-lead">Step through a simplified workflow. Use the controls to move between steps or let the stepper auto-advance.</p>
+
+        <div class="workflow" id="demo-workflow" aria-roledescription="carousel" aria-label="Demo workflow carousel">
+          <div class="workflow__controls">
+            <button class="workflow__btn workflow__btn--prev" id="workflow-prev" aria-controls="workflow-slides" aria-label="Previous step" title="Previous step">&larr;</button>
+            <div class="workflow__indicators" role="tablist" aria-label="Workflow steps" id="workflow-indicators">
+              <!-- Indicators will reflect current step; JS updates aria-selected -->
+              <button class="workflow__indicator" data-step-target="0" role="tab" aria-selected="true" aria-controls="slide-0">1</button>
+              <button class="workflow__indicator" data-step-target="1" role="tab" aria-selected="false" aria-controls="slide-1">2</button>
+              <button class="workflow__indicator" data-step-target="2" role="tab" aria-selected="false" aria-controls="slide-2">3</button>
+            </div>
+            <button class="workflow__btn workflow__btn--next" id="workflow-next" aria-controls="workflow-slides" aria-label="Next step" title="Next step">&rarr;</button>
+          </div>
+
+          <div class="workflow__viewport" id="workflow-slides" role="region" aria-live="polite">
+            <ul class="workflow__slides" id="workflow-slides-list">
+              <li class="workflow-step" id="slide-0" data-step-index="0" role="group" aria-roledescription="slide" aria-label="Step 1: Briefing" aria-hidden="false">
+                <div class="workflow-step__visual" aria-hidden="true">
+                  <svg width="320" height="180" viewBox="0 0 320 180" role="img" aria-hidden="true"><rect width="320" height="180" fill="#EEF2FF"></rect></svg>
+                </div>
+                <div class="workflow-step__content">
+                  <h3 class="workflow-step__title">Step 1 ? Capture the brief</h3>
+                  <p class="workflow-step__desc">Enter the project brief and constraints. The AI normalizes input into structured prompts.</p>
+                  <!-- TODO: Replace with interactive brief capture UI -->
+                </div>
+              </li>
+
+              <li class="workflow-step" id="slide-1" data-step-index="1" role="group" aria-roledescription="slide" aria-label="Step 2: Generate" aria-hidden="true">
+                <div class="workflow-step__visual" aria-hidden="true">
+                  <svg width="320" height="180" viewBox="0 0 320 180" role="img" aria-hidden="true"><rect width="320" height="180" fill="#ECFDF5"></rect></svg>
+                </div>
+                <div class="workflow-step__content">
+                  <h3 class="workflow-step__title">Step 2 ? Generate concepts</h3>
+                  <p class="workflow-step__desc">The system produces multiple directions. Use controls to iterate and compare variants.</p>
+                </div>
+              </li>
+
+              <li class="workflow-step" id="slide-2" data-step-index="2" role="group" aria-roledescription="slide" aria-label="Step 3: Refine & Export" aria-hidden="true">
+                <div class="workflow-step__visual" aria-hidden="true">
+                  <svg width="320" height="180" viewBox="0 0 320 180" role="img" aria-hidden="true"><rect width="320" height="180" fill="#FFF7ED"></rect></svg>
+                </div>
+                <div class="workflow-step__content">
+                  <h3 class="workflow-step__title">Step 3 ? Refine and deliver</h3>
+                  <p class="workflow-step__desc">Approve a final direction, apply brand tokens, and export production-ready assets.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="workflow__footer">
+            <button class="btn btn-ghost" id="workflow-toggle-auto" aria-pressed="false">Auto-advance: Off</button>
+            <!-- TODO: Hook analytics/lead-capture for workflow CTA in production -->
+            <a href="#contact-cta" class="btn btn-primary" id="workflow-cta">Request a Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="demo-cta" aria-labelledby="cta-title" role="region">
+      <div class="container">
+        <h2 id="cta-title" class="section-title">Ready to explore?</h2>
+        <p class="section-lead">This demo is a lightweight preview. Reach out to schedule a full walkthrough and pilot.</p>
+        <div class="cta-actions">
+          <a href="mailto:hello@ai-agency.example" class="btn btn-primary" id="contact-cta">Contact Sales</a>
+          <a href="index.html" class="btn btn-secondary">Return Home</a>
+        </div>
+        <!-- TODO: Hook CTA to analytics and lead capture forms in production -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo" aria-label="Footer">
+    <div class="container footer-inner">
+      <nav role="navigation" aria-label="Footer links" class="footer-nav">
+        <ul class="footer-nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="demo.html">AI Agency Demo</a></li>
+        </ul>
+      </nav>
+      <div class="site-meta">
+        <p>&copy; <span id="current-year"></span> AI Agency ? Demo content for preview purposes.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts (global + demo-specific init guarded in script.js) -->
+  <script defer src="script.js"></script>
+
+  <!-- Inline accessibility helpers (non-invasive) -->
+  <script>
+    // Lightweight DOM helpers to improve immediate accessibility UX before main script runs.
+    (function () {
+      // Fill current year
+      var y = new Date().getFullYear();
+      var el = document.getElementById('current-year');
+      if (el) el.textContent = y;
+
+      // Mobile menu toggle: unobtrusive, works if script.js doesn't replace
+      var toggle = document.getElementById('nav-toggle');
+      var mobileMenu = document.getElementById('mobile-menu');
+      if (toggle && mobileMenu) {
+        toggle.addEventListener('click', function () {
+          var expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          if (mobileMenu.hasAttribute('hidden')) {
+            mobileMenu.removeAttribute('hidden');
+          } else {
+            mobileMenu.setAttribute('hidden', '');
+          }
+        });
+      }
+
+      // Skip-link focus handling for browsers that need it
+      var skip = document.getElementById('skip-link');
+      var main = document.getElementById('main');
+      if (skip && main) {
+        skip.addEventListener('click', function (e) {
+          // Ensure main can be focused
+          main.setAttribute('tabindex', '-1');
+          main.focus();
+        });
+      }
+    })();
+  </script>
+
+  <!-- DEMO: guarded initDemo() for this page (implements minimal stepper/carousel + accessibility) -->
+  <script>
+    (function () {
+      function initDemo() {
+        var body = document.body;
+        if (!body) return;
+
+        // Elements
+        var slides = Array.prototype.slice.call(document.querySelectorAll('.workflow-step'));
+        var indicators = Array.prototype.slice.call(document.querySelectorAll('.workflow__indicator'));
+        var prevBtn = document.getElementById('workflow-prev');
+        var nextBtn = document.getElementById('workflow-next');
+        var toggleAutoBtn = document.getElementById('workflow-toggle-auto');
+        var indicatorsContainer = document.getElementById('workflow-indicators');
+        var workflow = document.getElementById('demo-workflow');
+
+        if (!slides.length || !indicators.length || !prevBtn || !nextBtn || !toggleAutoBtn) {
+          return; // nothing to do
+        }
+
+        var current = 0;
+        var auto = false;
+        var intervalId = null;
+        var AUTO_INTERVAL = 4000;
+
+        function showSlide(index, focusIndicator) {
+          index = (index + slides.length) % slides.length;
+          current = index;
+
+          slides.forEach(function (s, i) {
+            var hidden = i !== index;
+            s.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+          });
+
+          indicators.forEach(function (btn, i) {
+            var sel = i === index;
+            btn.setAttribute('aria-selected', sel ? 'true' : 'false');
+            btn.setAttribute('tabindex', sel ? '0' : '-1');
+            if (sel && focusIndicator) {
+              btn.focus();
+            }
+          });
+        }
+
+        function prev() {
+          showSlide(current - 1);
+          restartAutoIfOn();
+        }
+
+        function next() {
+          showSlide(current + 1);
+          restartAutoIfOn();
+        }
+
+        function startAuto() {
+          if (intervalId) return;
+          auto = true;
+          toggleAutoBtn.setAttribute('aria-pressed', 'true');
+          toggleAutoBtn.textContent = 'Auto-advance: On';
+          intervalId = setInterval(function () {
+            showSlide(current + 1);
+          }, AUTO_INTERVAL);
+        }
+
+        function stopAuto() {
+          auto = false;
+          toggleAutoBtn.setAttribute('aria-pressed', 'false');
+          toggleAutoBtn.textContent = 'Auto-advance: Off';
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+        }
+
+        function toggleAuto() {
+          if (auto) stopAuto();
+          else startAuto();
+        }
+
+        function restartAutoIfOn() {
+          if (auto) {
+            stopAuto();
+            startAuto();
+          }
+        }
+
+        // Wire buttons
+        prevBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          prev();
+        });
+        nextBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          next();
+        });
+
+        // Indicators
+        indicators.forEach(function (btn, i) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            showSlide(i, true);
+            restartAutoIfOn();
+          });
+          btn.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              showSlide(i, true);
+            } else if (e.key === 'ArrowLeft') {
+              e.preventDefault();
+              var prevIndex = (i - 1 + indicators.length) % indicators.length;
+              indicators[prevIndex].focus();
+            } else if (e.key === 'ArrowRight') {
+              e.preventDefault();
+              var nextIndex = (i + 1) % indicators.length;
+              indicators[nextIndex].focus();
+            }
+          });
+        });
+
+        // Keyboard shortcuts when focus is within the workflow
+        workflow.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prev();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            next();
+          }
+        });
+
+        // Auto toggle
+        toggleAutoBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          toggleAuto();
+        });
+
+        // Initialize state
+        showSlide(0, false);
+      }
+
+      // Guarded run: only run on demo page
+      try {
+        var isDemo = false;
+        if (document && document.body) {
+          isDemo = document.body.dataset && document.body.dataset.page === 'demo';
+        }
+        if (!isDemo && typeof location !== 'undefined' && location.pathname) {
+          isDemo = location.pathname.endsWith('demo.html');
+        }
+        if (isDemo) {
+          // Run after a short delay to avoid clobbering other init logic
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDemo);
+          } else {
+            initDemo();
+          }
+        }
+      } catch (err) {
+        // Fail silently to avoid impacting other pages
+        console.error && console.error('initDemo error', err);
+      }
+    })();
+  </script>
+</body>
+</html>
