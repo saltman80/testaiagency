@@ -67,9 +67,12 @@
       nav.site-nav.is-open .nav-links{display:flex;flex-direction:column;position:absolute;right:1rem;top:64px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:.75rem;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
       .hero{padding:1rem}
     }
+
+    /* Small enhancement for the demo CTA inside nav (inline fallback visual) */
+    .nav-demo-link{ font-weight:800; padding: .45rem .8rem; border-radius:10px; display:inline-flex; align-items:center; gap:.5rem; min-height:40px; }
   </style>
 </head>
-<body>
+<body data-page="about">
   <a href="#main-content" class="skip-link" id="skip-link">Skip to content</a>
 
   <header class="site-header" role="banner" id="site-header">
@@ -87,6 +90,7 @@
         <div class="nav-links" id="nav-links">
           <a href="index.html" class="nav-link" data-smooth>Home</a>
           <a href="about.html" class="nav-link" aria-current="page" data-smooth>About Us</a>
+          <a href="demo.html" class="nav-link nav-demo-link btn btn--primary" title="Open AI Agency Demo">AI Agency Demo</a>
           <a href="index.html#contact" class="nav-link" data-smooth>Contact</a>
         </div>
       </nav>
@@ -211,6 +215,7 @@
   <script defer src="script.js"></script>
   <script>
     // Lightweight inline behaviors to ensure basic functionality if script.js is missing.
+    // This fallback will skip initialization if the main script is present to avoid duplicate listeners.
     (function(){
       // If the main external script has loaded, prefer it and skip this inline fallback.
       if (window.__lumenaiScriptLoaded) return;
@@ -238,117 +243,194 @@
         return el.tabIndex >= 0;
       }
 
-      // set current year
-      var y = new Date().getFullYear();
-      var el = document.getElementById('year');
-      if(el) el.textContent = y;
-
-      // Nav toggle: toggle a class on the nav container (CSS listens for .is-open on the nav)
-      var toggle = document.querySelector('[data-nav-toggle]');
-      var nav = document.querySelector('[data-nav]');
-      var navLinks = document.getElementById('nav-links');
-      if(toggle && nav){
-        toggle.addEventListener('click', function(){
-          var expanded = this.getAttribute('aria-expanded') === 'true';
-          this.setAttribute('aria-expanded', String(!expanded));
-          nav.classList.toggle('is-open');
-          // Also toggle the links container for better CSS compatibility if present
-          if(navLinks){
-            navLinks.classList.toggle('is-open');
-            navLinks.setAttribute('aria-expanded', String(!expanded));
-          }
-        });
+      // Minimal DOM-ready guard (script is deferred but keep safe)
+      var ready = document.readyState === 'complete' || document.readyState === 'interactive';
+      if (!ready) {
+        document.addEventListener('DOMContentLoaded', initFallback);
+      } else {
+        initFallback();
       }
 
-      // Smooth scroll for intra-site anchors (only when JS enabled)
-      var smoothAnchors = document.querySelectorAll('a[data-smooth]');
-      smoothAnchors.forEach(function(a){
-        var href = a.getAttribute('href') || '';
-        if(href.indexOf('#') === -1) return;
-        a.addEventListener('click', function(e){
-          // Build absolute URL relative to current location
-          var dest;
-          try{
-            dest = new URL(href, window.location.href);
-          }catch(err){
-            // cannot parse URL, don't intervene
-            return;
+      function initFallback(){
+        // set current year
+        var y = new Date().getFullYear();
+        var yearEl = document.getElementById('year');
+        if(yearEl) yearEl.textContent = y;
+
+        // Nav toggle: toggle a class on the nav container (CSS listens for .is-open on the nav)
+        var toggle = document.querySelector('[data-nav-toggle]');
+        var nav = document.querySelector('[data-nav]');
+        var navLinks = document.getElementById('nav-links');
+
+        // Avoid overwriting existing aria-controls if a more robust script is present later.
+        if (toggle && nav) {
+          // Ensure aria-controls points to the actual toggled element (do not overwrite if present)
+          if (!toggle.getAttribute('aria-controls')) {
+            if (navLinks && navLinks.id) {
+              toggle.setAttribute('aria-controls', navLinks.id);
+            } else if (nav.id) {
+              toggle.setAttribute('aria-controls', nav.id);
+            }
           }
 
-          // Compare normalized path bases so '/' and '/index.html' are treated as same
-          var currentBase = pathBase(window.location.pathname);
-          var destBase = pathBase(dest.pathname);
+          toggle.addEventListener('click', function(){
+            var expanded = this.getAttribute('aria-expanded') === 'true';
+            var nextState = !expanded;
+            this.setAttribute('aria-expanded', String(nextState));
+            nav.classList.toggle('is-open', nextState);
+            document.body.classList.toggle('nav-open', nextState);
 
-          if(dest.origin === window.location.origin && destBase === currentBase){
-            var hash = dest.hash || '';
-            if(hash){
-              var targetId = hash.slice(1);
-              var target = document.getElementById(targetId);
-              if(target){
-                e.preventDefault();
+            // Also toggle the links container for better CSS compatibility if present
+            if(navLinks){
+              navLinks.classList.toggle('is-open', nextState);
+              navLinks.setAttribute('aria-expanded', String(nextState));
+            }
+          }, {passive: true});
+        }
 
-                // Make target focusable if needed, storing previous tabindex to restore later
-                var prevTab = target.getAttribute('tabindex');
-                var hadTab = target.hasAttribute('tabindex');
-                var needsTemp = !hadTab && !isFocusable(target);
-                if(needsTemp){
-                  target.setAttribute('tabindex','-1');
-                }
+        // Add behavior: auto-close mobile nav when a link is clicked (improves UX)
+        if (nav && navLinks) {
+          navLinks.addEventListener('click', function (e) {
+            var target = e.target;
+            if (!target) return;
+            var anchor = target.closest('a');
+            if (!anchor) return;
+            // If the link points to same page anchor or another page, close the nav on small screens
+            var expanded = nav.classList.contains('is-open') || (toggle && toggle.getAttribute('aria-expanded') === 'true');
+            if (expanded && window.matchMedia('(max-width: 819px)').matches) {
+              closeNav();
+            }
+          }, {passive: true});
+        }
 
-                // Attempt to focus without scrolling first, then perform smooth scroll
-                try{
-                  target.focus({preventScroll: true});
-                }catch(err){
-                  try{ target.focus(); }catch(e){}
-                }
+        // Close nav helper (shared tidy-up)
+        function closeNav(){
+          if (!nav) return;
+          nav.classList.remove('is-open');
+          if (navLinks) navLinks.classList.remove('is-open');
+          if (toggle) toggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+          if (navLinks) navLinks.setAttribute('aria-expanded', 'false');
+        }
 
-                // Calculate scroll position taking into account sticky header offset (match CSS var --scroll-offset)
-                var headerOffset = 72; // keep consistent with CSS fallback; primary stylesheet defines --scroll-offset: 76px
-                var rectTop = target.getBoundingClientRect().top + window.scrollY - headerOffset;
-                window.scrollTo({ top: Math.max(0, Math.floor(rectTop)), behavior: 'smooth' });
+        // Close on Escape key for accessibility
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' || e.key === 'Esc') {
+            if (nav && (nav.classList.contains('is-open') || (toggle && toggle.getAttribute('aria-expanded') === 'true'))) {
+              closeNav();
+              if (toggle) toggle.focus();
+            }
+          }
+        }, {passive: true});
 
-                // Restore tabindex if we added it, or restore previous value
-                if(needsTemp){
-                  // Delay removal slightly to ensure focus action isn't interrupted on some browsers
-                  setTimeout(function(){
-                    target.removeAttribute('tabindex');
-                  }, 300);
-                }else if(prevTab !== null){
-                  target.setAttribute('tabindex', prevTab);
+        // Smooth scroll for intra-site anchors (only when JS enabled)
+        var smoothAnchors = document.querySelectorAll('a[data-smooth]');
+        smoothAnchors.forEach(function(a){
+          var href = a.getAttribute('href') || '';
+          if(href.indexOf('#') === -1) return;
+          a.addEventListener('click', function(e){
+            // Build absolute URL relative to current location
+            var dest;
+            try{
+              dest = new URL(href, window.location.href);
+            }catch(err){
+              // cannot parse URL, don't intervene
+              return;
+            }
+
+            // Compare normalized path bases so '/' and '/index.html' are treated as same
+            var currentBase = pathBase(window.location.pathname);
+            var destBase = pathBase(dest.pathname);
+
+            if(dest.origin === window.location.origin && destBase === currentBase){
+              var hash = dest.hash || '';
+              if(hash){
+                var targetId = hash.slice(1);
+                var target = document.getElementById(targetId);
+                if(target){
+                  e.preventDefault();
+
+                  // Make target focusable if needed, storing previous tabindex to restore later
+                  var prevTab = target.getAttribute('tabindex');
+                  var hadTab = target.hasAttribute('tabindex');
+                  var needsTemp = !hadTab && !isFocusable(target);
+                  if(needsTemp){
+                    target.setAttribute('tabindex','-1');
+                  }
+
+                  // Attempt to focus without scrolling first, then perform smooth scroll
+                  try{
+                    target.focus({preventScroll: true});
+                  }catch(err){
+                    try{ target.focus(); }catch(e){}
+                  }
+
+                  // Calculate scroll position taking into account sticky header offset (match CSS var --scroll-offset if present)
+                  var headerOffset = 72; // fallback
+                  try {
+                    var rootStyles = getComputedStyle(document.documentElement);
+                    var cssOffset = rootStyles.getPropertyValue('--scroll-offset');
+                    if (cssOffset) {
+                      // parse "76px" -> 76
+                      var parsed = parseInt(cssOffset.trim().replace('px',''), 10);
+                      if (!isNaN(parsed)) headerOffset = parsed;
+                    }
+                  } catch (err) { /* ignore */ }
+
+                  var rectTop = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+                  window.scrollTo({ top: Math.max(0, Math.floor(rectTop)), behavior: 'smooth' });
+
+                  // Restore tabindex if we added it, or restore previous value
+                  if(needsTemp){
+                    // Delay removal slightly to ensure focus action isn't interrupted on some browsers
+                    setTimeout(function(){
+                      try { target.removeAttribute('tabindex'); } catch(e){}
+                    }, 300);
+                  }else if(prevTab !== null){
+                    target.setAttribute('tabindex', prevTab);
+                  }
                 }
               }
             }
-          }
-          // If the destination is on another page (different base), allow default navigation
+            // If the destination is on another page (different base), allow default navigation
+          });
         });
-      });
 
-      // Ensure skip link focus works in all browsers and restore original tabindex afterward
-      var skip = document.getElementById('skip-link');
-      if(skip){
-        skip.addEventListener('click', function(e){
-          var main = document.getElementById('main-content');
-          if(main){
-            var prev = main.getAttribute('tabindex');
-            var hadPrev = main.hasAttribute('tabindex');
-            if(!hadPrev) main.setAttribute('tabindex','-1');
-            try{ main.focus(); }catch(err){}
-            // restore tabindex on blur (once)
-            var cleanup = function(){
-              if(!hadPrev){
-                main.removeAttribute('tabindex');
-              }else if(prev !== null){
-                main.setAttribute('tabindex', prev);
-              }
-              main.removeEventListener('blur', cleanup, true);
-            };
-            main.addEventListener('blur', cleanup, true);
-          }
-        });
-      }
+        // Ensure skip link focus works in all browsers and restore original tabindex afterward
+        var skip = document.getElementById('skip-link');
+        if(skip){
+          skip.addEventListener('click', function(e){
+            var main = document.getElementById('main-content');
+            if(main){
+              var prev = main.getAttribute('tabindex');
+              var hadPrev = main.hasAttribute('tabindex');
+              if(!hadPrev) main.setAttribute('tabindex','-1');
+              try{ main.focus(); }catch(err){}
+              // restore tabindex on blur (once)
+              var cleanup = function(){
+                if(!hadPrev){
+                  main.removeAttribute('tabindex');
+                }else if(prev !== null){
+                  main.setAttribute('tabindex', prev);
+                }
+                main.removeEventListener('blur', cleanup, true);
+              };
+              main.addEventListener('blur', cleanup, true);
+            }
+          });
+        }
 
-      // Mark that the inline fallback has run to avoid duplicate fallback initialization
-      window.__lumenaiInlineLoaded = true;
+        // Micro-aria enhancement: ensure nav links have visible focus styles
+        // This is primarily styling; we add a minimal focus indicator for keyboard users (works even if styles.css missing)
+        try {
+          var styleEl = document.createElement('style');
+          styleEl.textContent = '\n  .nav-link:focus{ outline: 3px solid rgba(110,231,183,0.12); outline-offset: 2px; border-radius:6px; }\n  .nav-demo-link:focus{ box-shadow: 0 0 0 4px rgba(96,165,250,0.12); }\n';
+          document.head.appendChild(styleEl);
+        } catch (err) { /* ignore */ }
+
+        // Mark that the inline fallback has run to avoid duplicate fallback initialization
+        window.__lumenaiInlineLoaded = true;
+      } // initFallback end
     })();
   </script>
 </body>
