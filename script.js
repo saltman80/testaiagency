@@ -5,6 +5,7 @@
  * - Mobile navigation toggle (accessible)
  * - Smooth-scrolling for in-page anchor links
  * - Client-side contact form validation + draft persistence (localStorage)
+ * - Demo page lightweight interactions (initDemo) ? guarded to demo.html only
  *
  * Public API:
  * - SiteApp.init(options)
@@ -257,22 +258,57 @@
 
     /**
      * Mobile navigation behavior
+     *
+     * Improved selection logic:
+     * - If toggle has aria-controls pointing to an existing element use that first.
+     * - Fallback to an explicit '#mobile-menu' selector if present.
+     * - Otherwise fall back to the configured generic selector.
+     * This avoids binding to the wrong nav and respects pre-existing aria-controls.
      */
     function setupMobileNav() {
       if (!opts.enableMobileNav) return;
       const toggle = document.querySelector(opts.mobileNavToggleSelector);
-      const nav = document.querySelector(opts.mobileNavContainerSelector);
       const body = document.body;
 
-      if (!toggle || !nav) {
-        Logger.debug('Mobile nav: missing toggle or nav container', toggle, nav);
+      if (!toggle) {
+        Logger.debug('Mobile nav: missing toggle', opts.mobileNavToggleSelector);
         return;
       }
 
-      // Ensure accessibility attributes
-      const navId = nav.id || `main-nav-${Math.random().toString(36).slice(2, 8)}`;
-      if (!nav.id) nav.id = navId;
-      toggle.setAttribute('aria-controls', nav.id);
+      // Prefer target provided via aria-controls on the toggle if it references an existing element
+      let nav = null;
+      try {
+        const ariaControls = toggle.getAttribute && toggle.getAttribute('aria-controls');
+        if (ariaControls) {
+          const found = document.getElementById(ariaControls);
+          if (found) nav = found;
+        }
+      } catch (_) { /* ignore */ }
+
+      // If no nav from aria-controls, try an explicit mobile menu id commonly used
+      if (!nav) {
+        nav = document.getElementById('mobile-menu') || document.querySelector('#mobile-menu');
+      }
+
+      // Fallback to configured generic selector
+      if (!nav) {
+        nav = document.querySelector(opts.mobileNavContainerSelector);
+      }
+
+      if (!nav) {
+        Logger.debug('Mobile nav: nav container not found via any selector');
+        return;
+      }
+
+      // Ensure accessibility attributes: only set aria-controls if not present (respect existing)
+      if (!toggle.getAttribute('aria-controls')) {
+        if (!nav.id) nav.id = `main-nav-${Math.random().toString(36).slice(2, 8)}`;
+        toggle.setAttribute('aria-controls', nav.id);
+      } else {
+        // If aria-controls exists but nav had no id, try to ensure the target is correct
+        if (!nav.id) nav.id = toggle.getAttribute('aria-controls') || `main-nav-${Math.random().toString(36).slice(2, 8)}`;
+      }
+
       if (!toggle.hasAttribute('aria-expanded')) toggle.setAttribute('aria-expanded', 'false');
       if (!nav.hasAttribute('aria-expanded')) nav.setAttribute('aria-expanded', 'false');
 
@@ -327,7 +363,7 @@
         toggleNav();
       });
 
-      // also support quick touchstart for snappy mobile - passive true
+      // also support quick touchstart for snappy mobile - passive true (no-op handler to hint to browser)
       addListener(toggle, 'touchstart', function () {
         // no-op; keep passive true to avoid blocking
       }, { passive: true });
@@ -338,24 +374,47 @@
 
     /**
      * Smooth scroll handling for in-page anchors.
+     *
+     * - Treats same-page links (including those with explicit filename like index.html#id) as smooth-scroll targets.
+     * - Uses resolveScrollOffset everywhere to avoid double-scrolls and CSS/JS offset mismatch.
+     * - Delegated single handler on document for performance.
      */
     function setupSmoothScroll() {
       if (!opts.enableSmoothScroll) return;
 
+      function isSamePageLink(link) {
+        try {
+          // Create absolute URL and compare origin + pathname to current location
+          const url = new URL(link.href, location.href);
+          // if no hash, not an anchor target we care about
+          if (!url.hash) return false;
+          return url.origin === location.origin && (url.pathname === location.pathname || url.pathname === (location.pathname.replace(/^\//, '') || '/'));
+        } catch (e) {
+          // fallback: links starting with '#' are same-page
+          return (link.getAttribute('href') || '').startsWith('#');
+        }
+      }
+
       function handleAnchorClick(ev) {
         // Only left-click w/o modifier keys
         if (ev.defaultPrevented) return;
-        // Some browsers set button === 0 for left click; guard if undefined
         if (ev.button !== undefined && ev.button !== 0) return;
         if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
 
         const link = ev.target.closest('a');
         if (!link) return;
-        const href = link.getAttribute('href') || '';
-        if (!href.startsWith('#')) return; // only same-page anchors
 
-        // If href is just '#' no-op (smooth scroll to top)
-        const id = href.slice(1);
+        const href = link.getAttribute('href') || '';
+        // If the link explicitly disables smooth via data-smooth="false", skip
+        if (link.dataset && link.dataset.smooth === 'false') return;
+
+        // Determine if this link refers to the current page anchor
+        if (!isSamePageLink(link)) return;
+
+        // Derive the target id from hash
+        const hash = (href.indexOf('#') === 0) ? href : (new URL(link.href, location.href).hash || '');
+        const id = hash ? hash.slice(1) : '';
+        // If no id, treat as "scroll to top"
         if (!id) {
           ev.preventDefault();
           try {
@@ -367,17 +426,21 @@
         }
 
         const target = document.getElementById(id) || document.getElementsByName(id)[0];
-        if (!target) return; // let default behavior occur (maybe external)
+        if (!target) return; // allow default if element not found
         ev.preventDefault();
-        // compute top offset using runtime opts
-        const top = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - (opts.smoothScrollOffset || DEFAULTS.smoothScrollOffset));
+        // Use focusAndReveal which resolves offsets and performs the scroll once
         try {
-          window.scrollTo({ top, behavior: 'smooth' });
-          // ensure focus & accessibility and pass runtime offset so focusAndReveal uses it
-          focusAndReveal(target, opts.smoothScrollOffset);
+          focusAndReveal(target, undefined);
         } catch (e) {
-          window.scrollTo(0, top);
-          try { focusAndReveal(target, opts.smoothScrollOffset); } catch (er) { /* ignore */ }
+          // fallback: do manual scroll using resolved offset
+          const top = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - resolveScrollOffset());
+          try {
+            window.scrollTo({ top, behavior: 'smooth' });
+            target.focus && target.focus();
+          } catch (_) {
+            window.scrollTo(0, top);
+            target.focus && target.focus();
+          }
         }
       }
 
@@ -662,6 +725,264 @@
   ensureAutoInit();
 
   /**
+   * initDemo()
+   *
+   * Lightweight interactions for demo.html.
+   * Guarded so it only initializes on demo pages:
+   * - location.pathname endsWith demo.html OR
+   * - <body data-page="demo"> is set
+   *
+   * Features:
+   * - Workflow stepper/carousel controlled by prev/next and indicators
+   * - Keyboard navigation (Left/Right/Home/End, Enter/Space to activate)
+   * - aria-live announcement for step changes
+   * - Pauses autoplay on visibility change and user interaction
+   */
+  (function initDemoGuarded() {
+    function isDemoPage() {
+      try {
+        if (document.body && document.body.dataset && document.body.dataset.page === 'demo') return true;
+        return /demo\.html$/.test(location.pathname);
+      } catch (e) {
+        return false;
+      }
+    }
+
+    if (!isDemoPage()) return;
+
+    function initDemo() {
+      // Wait till DOM ready
+      function onReady() {
+        try {
+          const workflowContainer = document.getElementById('demo-workflow') || document.querySelector('.demo-workflow');
+          if (!workflowContainer) {
+            Logger.debug('Demo: workflow container not found (no demo interactions will be initialized).');
+            return;
+          }
+
+          const slides = Array.from(workflowContainer.querySelectorAll('.workflow-step'));
+          if (!slides || !slides.length) {
+            Logger.debug('Demo: no workflow steps found inside workflow container.');
+            return;
+          }
+
+          // Build lightweight controls if not provided
+          let controls = workflowContainer.querySelector('.workflow-controls');
+          if (!controls) {
+            controls = document.createElement('div');
+            controls.className = 'workflow-controls';
+            controls.innerHTML = `
+              <button class="workflow-prev" aria-label="Previous step">?</button>
+              <div class="workflow-indicators" role="tablist"></div>
+              <button class="workflow-next" aria-label="Next step">?</button>
+            `;
+            workflowContainer.appendChild(controls);
+          }
+
+          const prevBtn = controls.querySelector('.workflow-prev');
+          const nextBtn = controls.querySelector('.workflow-next');
+          const indicatorsContainer = controls.querySelector('.workflow-indicators');
+
+          // Create indicators if not present
+          if (!indicatorsContainer) {
+            Logger.debug('Demo: indicators container not present and could not be created.');
+          }
+
+          // Create indicator buttons (tabs)
+          indicatorsContainer.innerHTML = '';
+          slides.forEach((s, i) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'workflow-indicator';
+            btn.setAttribute('role', 'tab');
+            btn.setAttribute('aria-selected', 'false');
+            btn.setAttribute('aria-controls', s.id || `workflow-step-${i}`);
+            btn.id = `workflow-indicator-${i}`;
+            btn.dataset.index = String(i);
+            btn.title = `Go to step ${i + 1}`;
+            btn.innerHTML = `<span class="indicator-label">Step ${i + 1}</span>`;
+            indicatorsContainer.appendChild(btn);
+            // ensure the slide has an id
+            if (!s.id) s.id = `workflow-step-${i}`;
+            s.setAttribute('role', 'tabpanel');
+            s.setAttribute('aria-labelledby', btn.id);
+          });
+
+          // announcer for screen readers
+          let announcer = workflowContainer.querySelector('.demo-announcer');
+          if (!announcer) {
+            announcer = document.createElement('div');
+            announcer.className = 'demo-announcer';
+            announcer.setAttribute('aria-live', 'polite');
+            announcer.setAttribute('aria-atomic', 'true');
+            announcer.style.position = 'absolute';
+            announcer.style.left = '-9999px';
+            announcer.style.width = '1px';
+            announcer.style.height = '1px';
+            announcer.style.overflow = 'hidden';
+            workflowContainer.appendChild(announcer);
+          }
+
+          let currentIndex = 0;
+          const indicatorButtons = Array.from(indicatorsContainer.querySelectorAll('.workflow-indicator'));
+
+          // Accessibility: make the workflow container focusable for keyboard handling
+          if (!workflowContainer.hasAttribute('tabindex')) workflowContainer.setAttribute('tabindex', '0');
+
+          function updateActive(index, opts) {
+            opts = opts || {};
+            index = Math.max(0, Math.min(slides.length - 1, index));
+            if (index === currentIndex && !opts.force) return;
+            slides.forEach((s, idx) => {
+              const active = idx === index;
+              s.classList.toggle('is-active', active);
+              s.setAttribute('aria-hidden', active ? 'false' : 'true');
+              if (active) {
+                // prefer to reveal the heading inside the step for better focusing
+                const heading = s.querySelector('h2, h3, h4') || s;
+                try { heading && heading.focus && heading.focus({ preventScroll: true }); } catch (_) { try { heading && heading.focus && heading.focus(); } catch (__) { /* ignore */ } }
+              }
+            });
+
+            indicatorButtons.forEach((b, idx) => {
+              const sel = idx === index;
+              b.setAttribute('aria-selected', sel ? 'true' : 'false');
+              b.classList.toggle('is-active', sel);
+            });
+
+            currentIndex = index;
+            // Announce the newly active step
+            try {
+              const headingText = (slides[currentIndex].querySelector('h2, h3, h4') || slides[currentIndex]).textContent.trim();
+              announcer.textContent = `Step ${currentIndex + 1} of ${slides.length}: ${headingText}`;
+            } catch (e) {
+              announcer.textContent = `Step ${currentIndex + 1} of ${slides.length}`;
+            }
+            // update styling hook for container
+            workflowContainer.setAttribute('data-active', String(currentIndex));
+          }
+
+          function nextSlide() {
+            updateActive((currentIndex + 1) % slides.length);
+          }
+          function prevSlide() {
+            updateActive((currentIndex - 1 + slides.length) % slides.length);
+          }
+          function goTo(index) {
+            updateActive(index);
+          }
+
+          // Click handlers
+          addDemoListeners();
+
+          function addDemoListeners() {
+            if (prevBtn) addListener(prevBtn, 'click', function () { prevSlide(); }, false);
+            if (nextBtn) addListener(nextBtn, 'click', function () { nextSlide(); }, false);
+
+            indicatorButtons.forEach(btn => {
+              addListener(btn, 'click', function (ev) {
+                const idx = parseInt(ev.currentTarget.dataset.index, 10);
+                if (!Number.isNaN(idx)) goTo(idx);
+              }, false);
+            });
+
+            // Keyboard navigation on the container
+            addListener(workflowContainer, 'keydown', function (ev) {
+              const key = ev.key || ev.code;
+              // Normalize space detection (Spacebar for older browsers)
+              const isSpace = (key === ' ' || key === 'Spacebar' || key === 'Space' || ev.code === 'Space');
+              switch (key) {
+                case 'ArrowLeft':
+                case 'Left':
+                  ev.preventDefault();
+                  prevSlide();
+                  break;
+                case 'ArrowRight':
+                case 'Right':
+                  ev.preventDefault();
+                  nextSlide();
+                  break;
+                case 'Home':
+                  ev.preventDefault();
+                  goTo(0);
+                  break;
+                case 'End':
+                  ev.preventDefault();
+                  goTo(slides.length - 1);
+                  break;
+                default:
+                  if (isSpace) {
+                    // When focused on an indicator, treat space as activation
+                    const active = document.activeElement;
+                    if (indicatorButtons.includes(active)) {
+                      ev.preventDefault();
+                      active.click && active.click();
+                    }
+                  }
+                  break;
+              }
+            }, false);
+
+            // Announce initial state
+            updateActive(0, { force: true });
+          }
+
+          // Autoplay: subtle auto-advance, paused on user interaction/visibilitychange
+          let autoplayInterval = null;
+          const AUTO_MS = 6000;
+          function startAutoplay() {
+            if (autoplayInterval) return;
+            autoplayInterval = setInterval(() => {
+              nextSlide();
+            }, AUTO_MS);
+            // track in state if desired (not currently)
+          }
+          function stopAutoplay() {
+            if (autoplayInterval) {
+              clearInterval(autoplayInterval);
+              autoplayInterval = null;
+            }
+          }
+
+          // Start autoplay but pause on interaction
+          startAutoplay();
+
+          addListener(workflowContainer, 'mouseenter', stopAutoplay, false);
+          addListener(workflowContainer, 'mouseleave', startAutoplay, false);
+          addListener(workflowContainer, 'focusin', stopAutoplay, false);
+          addListener(workflowContainer, 'focusout', startAutoplay, false);
+
+          // Pause on hidden page
+          addListener(document, 'visibilitychange', function () {
+            if (document.hidden) stopAutoplay();
+            else startAutoplay();
+          }, false);
+
+          // Cleanup: ensure autoplay stopped before unload
+          addListener(window, 'beforeunload', stopAutoplay, false);
+
+          Logger.info('Demo: workflow initialized with', slides.length, 'steps');
+        } catch (e) {
+          Logger.warn('Demo: initialization error', e);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', onReady, { once: true, passive: true });
+      } else {
+        setTimeout(onReady, 0);
+      }
+    }
+
+    // Run initDemo immediately
+    try {
+      initDemo();
+    } catch (e) {
+      Logger.warn('Demo init failed', e);
+    }
+  })();
+
+  /**
    * Minimal in-file test harness (created when global.__SITEAPP_ENABLE_TESTS is true).
    * This provides three small checks: mobile nav toggle, smooth-scroll anchor behavior,
    * and contact form validation/persistence. Intended for lightweight local dev checks.
@@ -787,5 +1108,10 @@
     // non-critical test harness errors should not break app
     try { console.debug('SiteApp test harness error', e); } catch (_) {}
   }
+
+  // Set a global loaded flag so page-specific inline fallbacks can detect this script
+  try {
+    global.__lumenaiScriptLoaded = true;
+  } catch (_) {}
 
 })(typeof window !== 'undefined' ? window : this);
